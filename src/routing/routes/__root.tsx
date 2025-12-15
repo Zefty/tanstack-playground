@@ -10,6 +10,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import Header from "@/client/components/Header";
 import type { BetterAuthSession } from "@/server/auth";
 import appCss from "./styles.css?url";
+import { getIsomorphicSession } from "@/server/functions/getIsomorphicSession";
 
 interface RouterContext {
 	queryClient: QueryClient;
@@ -20,7 +21,7 @@ interface RouterContext {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
 	beforeLoad: async ({ context }) => {
-		return await context.getAuthSession();
+		return await getIsomorphicSession(context.queryClient);
 	},
 	head: () => ({
 		meta: [

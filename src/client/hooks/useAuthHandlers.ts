@@ -1,9 +1,12 @@
+import { useRouteContext, useRouter } from "@tanstack/react-router";
 import { useActionState, useState } from "react";
 import { authClient } from "../lib/authClient";
-import { useRouter } from "@tanstack/react-router";
 
 export function useAuthHandlers() {
 	const router = useRouter();
+	const routerContext = useRouteContext({
+		from: "__root__",
+	});
 	const [alert, setAlert] = useState<{ type: string; message: string }>();
 
 	const handleSignIn = async (_previousState: boolean, formData: FormData) => {
@@ -12,6 +15,11 @@ export function useAuthHandlers() {
 			password: formData.get("password")?.toString() || "",
 			rememberMe: true,
 		});
+
+		routerContext.queryClient.resetQueries({
+			queryKey: ["getAuthSession"],
+		});
+		await router.invalidate();
 
 		if (error) {
 			setAlert({
@@ -26,7 +34,6 @@ export function useAuthHandlers() {
 			message: "Signed in successfully!",
 		});
 
-		router.invalidate();
 		return true;
 	};
 
@@ -56,6 +63,11 @@ export function useAuthHandlers() {
 	const handleSignOut = async (_previousState: boolean) => {
 		const { data, error } = await authClient.signOut();
 
+		routerContext.queryClient.resetQueries({
+			queryKey: ["getAuthSession"],
+		});
+		await router.invalidate();
+
 		if (error || !data.success) {
 			setAlert({
 				type: "error",
@@ -71,8 +83,6 @@ export function useAuthHandlers() {
 			type: "success",
 			message: "Signed out successfully!",
 		});
-
-		router.invalidate();
 		return true;
 	};
 
