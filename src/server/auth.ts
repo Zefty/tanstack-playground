@@ -5,9 +5,9 @@ import { db } from "./db";
 
 export const auth = betterAuth({
 	plugins: [tanstackStartCookies()],
-	database: drizzleAdapter(db, {
-		provider: "pg",
-	}),
+	// database: drizzleAdapter(db, {
+	// 	provider: "pg",
+	// }),
 	emailAndPassword: {
 		enabled: true,
 	},

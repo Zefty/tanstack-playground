@@ -23,7 +23,6 @@ export const getRouter = async () => {
 		defaultPreload: "intent",
 		scrollRestoration: true,
 		defaultErrorComponent: (props) => {
-			console.log(props);
 			return (
 				<main className="flex flex-col items-center pt-[calc(100%/6)]">
 					<h1 className="text-3xl font-bold bg-red-500/25 rounded-md p-2 mb-12">{`${props.error.cause} ${props.error.message}`}</h1>
